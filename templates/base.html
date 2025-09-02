@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoveNX - Crypto Trading Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --background: #ffffff;
+            --foreground: #0a0a0a;
+            --card: #ffffff;
+            --card-foreground: #0a0a0a;
+            --primary: #030213;
+            --primary-foreground: #ffffff;
+            --secondary: #f3f4f6;
+            --secondary-foreground: #030213;
+            --muted: #ececf0;
+            --muted-foreground: #717182;
+            --accent: #e9ebef;
+            --accent-foreground: #030213;
+            --destructive: #d4183d;
+            --destructive-foreground: #ffffff;
+            --border: rgba(0, 0, 0, 0.1);
+            --ring: #9ca3af;
+            --chart-1: #f59e0b;
+            --chart-2: #10b981;
+            --chart-3: #3b82f6;
+            --chart-4: #8b5cf6;
+            --chart-5: #ef4444;
+            --radius: 0.625rem;
+        }
+        
+        .dark {
+            --background: #0a0a0a;
+            --foreground: #ffffff;
+            --card: #0a0a0a;
+            --card-foreground: #ffffff;
+            --primary: #ffffff;
+            --primary-foreground: #0a0a0a;
+            --secondary: #27272a;
+            --secondary-foreground: #ffffff;
+            --muted: #27272a;
+            --muted-foreground: #a1a1aa;
+            --accent: #27272a;
+            --accent-foreground: #ffffff;
+            --border: #27272a;
+            --ring: #52525b;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+        }
+        
+        .bg-background { background-color: var(--background); }
+        .bg-card { background-color: var(--card); }
+        .bg-primary { background-color: var(--primary); }
+        .bg-secondary { background-color: var(--secondary); }
+        .bg-muted { background-color: var(--muted); }
+        .bg-accent { background-color: var(--accent); }
+        .text-foreground { color: var(--foreground); }
+        .text-primary { color: var(--primary); }
+        .text-primary-foreground { color: var(--primary-foreground); }
+        .text-muted-foreground { color: var(--muted-foreground); }
+        .border-border { border-color: var(--border); }
+        .text-chart-1 { color: var(--chart-1); }
+        .text-chart-2 { color: var(--chart-2); }
+        .text-chart-3 { color: var(--chart-3); }
+        .text-chart-4 { color: var(--chart-4); }
+        .text-chart-5 { color: var(--chart-5); }
+    </style>
+</head>
+<body class="h-full bg-background text-foreground">
+    <!-- Navigation -->
+    <nav class="border-b border-border/40 bg-card">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="h-10 w-10">
+                        <svg viewBox="0 0 48 48" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="24" r="20" stroke="url(#gradient1)" stroke-width="2" fill="none" class="opacity-80"/>
+                            <path d="M24 8L36 24L24 40L12 24L24 8Z" fill="url(#gradient2)" class="opacity-90"/>
+                            <path d="M24 16L30 24L24 32L18 24L24 16Z" fill="var(--primary-foreground)"/>
+                            <path d="M10 28L16 24L22 26L28 22L34 26L38 24" stroke="url(#gradient1)" stroke-width="1.5" fill="none" class="opacity-60"/>
+                            <defs>
+                                <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="var(--primary)"/>
+                                    <stop offset="100%" stop-color="var(--chart-1)"/>
+                                </linearGradient>
+                                <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="var(--primary)"/>
+                                    <stop offset="50%" stop-color="var(--chart-1)"/>
+                                    <stop offset="100%" stop-color="var(--primary)"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-tight">
+                            <span class="text-primary">love</span><span class="text-chart-1">nx</span>
+                        </h1>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html" class="nav-link text-foreground hover:text-primary transition-colors">Home</a>
+                    <a href="trade.html" class="nav-link text-foreground hover:text-primary transition-colors">Trade</a>
+                    <a href="history.html" class="nav-link text-foreground hover:text-primary transition-colors">History</a>
+                    <a href="profile.html" class="nav-link text-foreground hover:text-primary transition-colors">Profile</a>
+                </div>
+
+                <!-- Auth Buttons -->
+                <div class="hidden md:flex items-center space-x-4" id="authButtons">
+                    <a href="login.html" class="px-4 py-2 text-foreground hover:text-primary transition-colors">Login</a>
+                    <a href="register.html" class="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity">Sign Up</a>
+                </div>
+
+                <!-- User Menu (Hidden by default) -->
+                <div class="hidden md:flex items-center space-x-4" id="userMenu" style="display: none;">
+                    <div class="relative">
+                        <button class="flex items-center space-x-2 text-foreground hover:text-primary transition-colors" onclick="toggleDropdown()">
+                            <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-primary-foreground text-sm"></i>
+                            </div>
+                            <span id="userName">User</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div id="dropdownMenu" class="absolute right-0 mt-2 w-48 bg-card border border-border rounded-lg shadow-lg hidden">
+                            <a href="profile.html" class="block px-4 py-2 text-foreground hover:bg-accent transition-colors">Profile</a>
+                            <a href="history.html" class="block px-4 py-2 text-foreground hover:bg-accent transition-colors">History</a>
+                            <button onclick="logout()" class="block w-full text-left px-4 py-2 text-foreground hover:bg-accent transition-colors">Logout</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Navigation -->
+            <div id="mobileMenu" class="md:hidden mt-4 hidden">
+                <div class="flex flex-col space-y-4">
+                    <a href="index.html" class="text-foreground hover:text-primary transition-colors">Home</a>
+                    <a href="trade.html" class="text-foreground hover:text-primary transition-colors">Trade</a>
+                    <a href="history.html" class="text-foreground hover:text-primary transition-colors">History</a>
+                    <a href="profile.html" class="text-foreground hover:text-primary transition-colors">Profile</a>
+                    <div class="border-t border-border pt-4">
+                        <a href="login.html" class="block text-foreground hover:text-primary transition-colors mb-2">Login</a>
+                        <a href="register.html" class="block px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-center">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="mainContent">
+        <!-- Content will be inserted here by individual pages -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-card border-t border-border/40 mt-auto">
+        <div class="container mx-auto px-6 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="h-8 w-8">
+                            <svg viewBox="0 0 48 48" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="24" cy="24" r="20" stroke="url(#gradient1)" stroke-width="2" fill="none" class="opacity-80"/>
+                                <path d="M24 8L36 24L24 40L12 24L24 8Z" fill="url(#gradient2)" class="opacity-90"/>
+                                <path d="M24 16L30 24L24 32L18 24L24 16Z" fill="var(--primary-foreground)"/>
+                                <defs>
+                                    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="var(--primary)"/>
+                                        <stop offset="100%" stop-color="var(--chart-1)"/>
+                                    </linearGradient>
+                                    <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="var(--primary)"/>
+                                        <stop offset="50%" stop-color="var(--chart-1)"/>
+                                        <stop offset="100%" stop-color="var(--primary)"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <span class="text-lg font-bold"><span class="text-primary">love</span><span class="text-chart-1">nx</span></span>
+                    </div>
+                    <p class="text-muted-foreground text-sm">The future of crypto trading, simplified.</p>
+                </div>
+                <div>
+                    <h3 class="font-medium mb-4">Platform</h3>
+                    <div class="space-y-2">
+                        <a href="#" class="block text-muted-foreground hover:text-primary transition-colors text-sm">Trade</a>
+                        <a href="#" class="block text-muted-foreground hover:text-primary transition-colors text-sm">Markets</a>
+                        <a href="#" class="block text-muted-foreground hover:text-primary transition-colors text-sm">Portfolio</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-medium mb-4">Support</h3>
+                    <div class="space-y-2">
+                        <a href="#" class="block text-muted-foreground hover:text-primary transition-colors text-sm">Help Center</a>
+                        <a href="#" class="block text-muted-foreground hover:text-primary transition-colors text-sm">Contact</a>
+                        <a href="#" class="block text-muted-foreground hover:text-primary transition-colors text-sm">API Docs</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-medium mb-4">Legal</h3>
+                    <div class="space-y-2">
+                        <a href="#" class="block text-muted-foreground hover:text-primary transition-colors text-sm">Privacy</a>
+                        <a href="#" class="block text-muted-foreground hover:text-primary transition-colors text-sm">Terms</a>
+                        <a href="#" class="block text-muted-foreground hover:text-primary transition-colors text-sm">Security</a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-border mt-8 pt-8 text-center text-muted-foreground text-sm">
+                <p>&copy; 2024 LoveNX. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Authentication state management
+        function checkAuthState() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const userName = localStorage.getItem('userName') || 'User';
+            
+            const authButtons = document.getElementById('authButtons');
+            const userMenu = document.getElementById('userMenu');
+            const userNameElement = document.getElementById('userName');
+            
+            if (isLoggedIn) {
+                authButtons.style.display = 'none';
+                userMenu.style.display = 'flex';
+                if (userNameElement) userNameElement.textContent = userName;
+            } else {
+                authButtons.style.display = 'flex';
+                userMenu.style.display = 'none';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userEmail');
+            window.location.href = 'index.html';
+        }
+
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdownMenu');
+            dropdown.classList.toggle('hidden');
+        }
+
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('dropdownMenu');
+            const button = event.target.closest('button');
+            
+            if (!button || !button.onclick || button.onclick.toString().indexOf('toggleDropdown') === -1) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Initialize auth state on page load
+        document.addEventListener('DOMContentLoaded', checkAuthState);
+
+        // Highlight current page in navigation
+        function highlightCurrentPage() {
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                if (link.href.includes(currentPage)) {
+                    link.classList.add('text-primary', 'font-medium');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', highlightCurrentPage);
+    </script>
+</body>
+</html>
