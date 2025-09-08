@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    :root {
+        --background: #ffffff;
+        --foreground: #0a0a0a;
+        --card: #ffffff;
+        --card-foreground: #0a0a0a;
+        --primary: #030213;
+        --primary-foreground: #ffffff;
+        --secondary: #f3f4f6;
+        --secondary-foreground: #030213;
+        --muted: #ececf0;
+        --muted-foreground: #717182;
+        --accent: #e9ebef;
+        --accent-foreground: #030213;
+        --destructive: #d4183d;
+        --destructive-foreground: #ffffff;
+        --border: rgba(0, 0, 0, 0.1);
+        --ring: #9ca3af;
+        --chart-1: #f59e0b;
+        --chart-2: #10b981;
+        --chart-3: #3b82f6;
+        --chart-4: #8b5cf6;
+        --chart-5: #ef4444;
+        --radius: 0.625rem;
+    }
+
+    body {
+        background-color: var(--background);
+        color: var(--foreground);
+    }
+
+    .bg-background {
+        background-color: var(--background);
+    }
+
+    .bg-card {
+        background-color: var(--card);
+    }
+
+    .bg-primary {
+        background-color: var(--primary);
+    }
+
+    .bg-secondary {
+        background-color: var(--secondary);
+    }
+
+    .bg-muted {
+        background-color: var(--muted);
+    }
+
+    .bg-accent {
+        background-color: var(--accent);
+    }
+
+    .text-foreground {
+        color: var(--foreground);
+    }
+
+    .text-primary {
+        color: var(--primary);
+    }
+
+    .text-primary-foreground {
+        color: var(--primary-foreground);
+    }
+
+    .text-muted-foreground {
+        color: var(--muted-foreground);
+    }
+
+    .border-border {
+        border-color: var(--border);
+    }
+
+    .text-chart-1 {
+        color: var(--chart-1);
+    }
+
+    .text-chart-2 {
+        color: var(--chart-2);
+    }
+
+    .text-chart-3 {
+        color: var(--chart-3);
+    }
+
+    .text-chart-4 {
+        color: var(--chart-4);
+    }
+
+    .text-chart-5 {
+        color: var(--chart-5);
+    }
+
+    .price-up {
+        color: var(--chart-2);
+    }
+
+    .price-down {
+        color: var(--chart-5);
+    }
+
+    .input-field {
+        background-color: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 8px 12px;
+        width: 100%;
+        transition: all 0.2s ease;
+    }
+
+    .input-field:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+
+    .btn-buy {
+        background-color: var(--chart-2);
+        color: white;
+        border-radius: var(--radius);
+        padding: 8px 16px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.2s ease;
+    }
+
+    .btn-sell {
+        background-color: var(--chart-5);
+        color: white;
+        border-radius: var(--radius);
+        padding: 8px 16px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.2s ease;
+    }
+
+    .btn-buy:hover,
+    .btn-sell:hover {
+        opacity: 0.9;
+    }
+
+    .order-book-row:hover {
+        background-color: var(--muted);
+    }
+
+    .tab-button {
+        padding: 8px 16px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        background-color: var(--background);
+        color: var(--foreground);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .tab-button.active {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+        border-color: var(--primary);
+    }
+</style>
+
+<div class="container mx-auto px-6 py-6"> 
+    <!-- Market Selector -->
+    <div class="mb-6">
+        <div class="flex items-center space-x-4 mb-4">
+            <select id="marketSelector" class="input-field w-auto" onchange="changeMarket()">
+                <option value="{{ coin.symbol }}/NGN">{{ coin.symbol }}/NGN</option>
+            </select>
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl font-bold" id="currentPrice">
+                    ₦{{ coin.price }}
+                </span>
+                <span 
+                  class="{% if coin.percent_change_24h >= 0 %}price-up{% else %}price-down{% endif %}" 
+                  id="priceChange">
+                  {{ coin.percent_change_24h|floatformat:2 }}%
+                </span>
+            </div>
+        </div>
+
+        <!-- Market Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-card border border-border rounded-lg p-4">
+                <div class="text-sm text-muted-foreground">24h High</div>
+                <div class="font-medium" id="high24h">
+                    ₦{{ coin.high_24h }}
+                </div>
+            </div>
+            <div class="bg-card border border-border rounded-lg p-4">
+                <div class="text-sm text-muted-foreground">24h Low</div>
+                <div class="font-medium" id="low24h">
+                    ₦{{ coin.low_24h }}
+                </div>
+            </div>
+            <div class="bg-card border border-border rounded-lg p-4">
+                <div class="text-sm text-muted-foreground">24h Volume</div>
+                <div class="font-medium" id="volume24h">
+                    ₦{{ coin.volume_24h }}
+                </div>
+            </div>
+            <div class="bg-card border border-border rounded-lg p-4">
+                <div class="text-sm text-muted-foreground">Market Cap</div>
+                <div class="font-medium" id="marketCap">
+                    ₦{{ coin.market_cap }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

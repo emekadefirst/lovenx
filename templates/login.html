@@ -128,7 +128,8 @@
                 </div>
 
                 <div class="mt-8">
-                    <form class="space-y-6" onsubmit="handleLogin(event)">
+                    <form class="space-y-6" method="POST">
+                        {% csrf_token %}
                         <div>
                             <label for="email" class="block text-sm font-medium text-foreground">
                                 Email address
@@ -136,9 +137,9 @@
                             <div class="mt-1 relative">
                                 <input
                                     id="email"
-                                    name="email"
-                                    type="email"
-                                    autocomplete="email"
+                                    name="username"
+                                    type="username"
+                                    autocomplete="username"
                                     required
                                     class="input-field"
                                     placeholder="Enter your email"
@@ -164,7 +165,7 @@
                                 <button
                                     type="button"
                                     class="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                                    onclick="togglePassword()"
+                                 
                                 >
                                     <i id="passwordToggle" class="fas fa-eye"></i>
                                 </button>
@@ -265,7 +266,7 @@
         </div>
     </div>
 
-    <script>
+    <!-- <script>
         function togglePassword() {
             const passwordInput = document.getElementById('password');
             const passwordToggle = document.getElementById('passwordToggle');
@@ -290,12 +291,13 @@
             errorDiv.classList.add('hidden');
         }
 
-        function setLoading(loading) {
+
+        function handleLogin(event) {
             const button = document.getElementById('loginButton');
             const buttonText = document.getElementById('loginButtonText');
             const spinner = document.getElementById('loginSpinner');
             
-            if (loading) {
+            if (event) {
                 button.disabled = true;
                 buttonText.textContent = 'Signing in...';
                 spinner.classList.remove('hidden');
@@ -304,41 +306,8 @@
                 buttonText.textContent = 'Sign in';
                 spinner.classList.add('hidden');
             }
-        }
 
-        function handleLogin(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            hideError();
-            setLoading(true);
-            
-            // Simulate API call
-            setTimeout(() => {
-                // Simple validation for demo
-                if (email && password) {
-                    // Store login state
-                    localStorage.setItem('isLoggedIn', 'true');
-                    localStorage.setItem('userName', email.split('@')[0]);
-                    localStorage.setItem('userEmail', email);
-                    
-                    // Redirect to trade page
-                    window.location.href = 'trade.html';
-                } else {
-                    showError('Please fill in all fields');
-                    setLoading(false);
-                }
-            }, 1000);
         }
-
-        // Check if already logged in
-        document.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('isLoggedIn') === 'true') {
-                window.location.href = 'trade.html';
-            }
-        });
-    </script>
+    </script> -->
 </body>
 </html>
