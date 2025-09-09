@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load humanize %}
 
 <style>
     :root {
@@ -175,12 +176,12 @@
             </select>
             <div class="flex items-center space-x-2">
                 <span class="text-2xl font-bold" id="currentPrice">
-                    ₦{{ coin.price }}
+                    ₦{{ coin.price|floatformat:2|intcomma }}
                 </span>
                 <span 
                   class="{% if coin.percent_change_24h >= 0 %}price-up{% else %}price-down{% endif %}" 
                   id="priceChange">
-                  {{ coin.percent_change_24h|floatformat:2 }}%
+                  {{ coin.percent_change_24h }}%
                 </span>
             </div>
         </div>
@@ -190,25 +191,25 @@
             <div class="bg-card border border-border rounded-lg p-4">
                 <div class="text-sm text-muted-foreground">24h High</div>
                 <div class="font-medium" id="high24h">
-                    ₦{{ coin.high_24h }}
+                    ₦{{ coin.24h_high|floatformat:2|intcomma }}
                 </div>
             </div>
             <div class="bg-card border border-border rounded-lg p-4">
                 <div class="text-sm text-muted-foreground">24h Low</div>
                 <div class="font-medium" id="low24h">
-                    ₦{{ coin.low_24h }}
+                    ₦{{ coin.24h_low|floatformat:2|intcomma }}
                 </div>
             </div>
             <div class="bg-card border border-border rounded-lg p-4">
                 <div class="text-sm text-muted-foreground">24h Volume</div>
                 <div class="font-medium" id="volume24h">
-                    ₦{{ coin.volume_24h }}
+                    ₦{{ coin.24h_volume|floatformat:2|intcomma }}
                 </div>
             </div>
             <div class="bg-card border border-border rounded-lg p-4">
                 <div class="text-sm text-muted-foreground">Market Cap</div>
                 <div class="font-medium" id="marketCap">
-                    ₦{{ coin.market_cap }}
+                    ₦{{ coin.market_cap|floatformat:2|intcomma }}
                 </div>
             </div>
         </div>
