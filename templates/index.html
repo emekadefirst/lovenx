@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 {% block content %}
 
 <style>
@@ -132,7 +133,9 @@
                 <h1 class="text-4xl md:text-6xl font-bold mb-6">
                     Trade Crypto with <span class="text-yellow-300">Confidence</span>
                 </h1>
+                <span class="text-yellow-300 ext-4xl md:text-6xl font-bold mb-6">No KYC needed!!</span>
                 <p class="text-xl md:text-2xl mb-8 opacity-90">
+                    
                     Advanced trading tools, real-time market data, and secure transactions.
                     Join thousands of traders on LoveNX.
                 </p>
@@ -241,7 +244,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-right font-medium">₦{{ coin.price }}</td>
+                        <td class="px-6 py-4 text-right font-medium">₦{{ coin.price|floatformat:2|intcomma }}</td>
                         <td class="px-6 py-4 text-right">
                             <span class="${changeClass} flex items-center justify-end">
                                 <i class="fas ${changeIcon} text-xs mr-1"></i>

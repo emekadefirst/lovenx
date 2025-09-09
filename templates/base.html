@@ -1,3 +1,5 @@
+{% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="en" class="h-full">
 
@@ -160,9 +162,9 @@
                 <div class="hidden md:flex items-center space-x-6">
                     <a href="/" class="nav-link text-foreground hover:text-primary transition-colors">Home</a>
                     <a href="/trade" class="nav-link text-foreground hover:text-primary transition-colors">Trade</a>
-                    <a href="history.html"
+                    <a href="/history"
                         class="nav-link text-foreground hover:text-primary transition-colors">History</a>
-                    <a href="profile.html"
+                    <a href="/profile"
                         class="nav-link text-foreground hover:text-primary transition-colors">Profile</a>
                 </div>
 
@@ -185,7 +187,7 @@
                 <div class="hidden md:flex items-center space-x-4" id="authButtons">
                     <a href="{% url 'login' %}"
                         class="px-4 py-2 text-foreground hover:text-primary transition-colors">Login</a>
-                    <a href="{% url 'register' %}"
+                    <a href="#"
                         class="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity">
                         Sign Up
                     </a>

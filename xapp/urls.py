@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, login_view, signup_view, profile, trade_view, xtrade_view
+from .views import home, login_view, signup_view, profile, trade_view, xtrade_view, history_view, fund_wallet
 
 
 urlpatterns = [    
@@ -8,5 +8,7 @@ urlpatterns = [
     path('signup/', signup_view, name='signup'),
     path('profile/', profile, name='profile'),
     path("trade/", trade_view, name="trade-view"),
+    path('history', history_view, name="history"),
+    path('fund-wallet', fund_wallet, name="fund-wallet"),
     path("xtrade/<int:id>", xtrade_view, name="xtrade")
 ]

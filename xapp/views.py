@@ -1,9 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
+from .models import Wallet, Transaction
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from .libs.cmc import get_crypto_data, get_coin_data
+from .libs.paystack import initialize_payment
+from django.http import HttpResponse
 
 
 
@@ -30,9 +34,13 @@ def signup_view(request):
 
 
 
+def history_view(request):
+    return render(request, 'history.html')
 
 def profile(request):
-    return render(request, 'profile.html')
+    user = request.user
+    wallet = get_object_or_404(Wallet, user=user)
+    return render(request, 'profile.html', {'user': user, 'wallet': wallet})
 
 
 def trade_view(request):
@@ -42,3 +50,40 @@ def trade_view(request):
 def xtrade_view(request, id=id):
     coin = get_coin_data(id)
     return render(request, 'xtrade.html', {"coin": coin})
+
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import get_object_or_404
+
+@csrf_exempt
+def fund_wallet(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)     
+            amount = data.get('amount')
+        except Exception:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+
+        user = request.user
+        if not user.is_authenticated:
+            return JsonResponse({"error": "User not authenticated"}, status=401)
+
+        email = user.email
+        payment = initialize_payment(email=email, amount=amount)
+        if payment:
+            wallet = get_object_or_404(Wallet, user=user)
+            Transaction.objects.create(
+                wallet=wallet,
+                amount=amount,
+                type="CREDIT",
+                category="DEPOSIT",
+                reference=payment['reference'],
+                previous_balance=wallet.balance
+            )
+            return JsonResponse({"url": payment['url']})
+        
+        return JsonResponse({"error": "Failed to initialize payment"}, status=400)
+
+    return HttpResponse(status=405)  
+

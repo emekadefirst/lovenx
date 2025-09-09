@@ -3,23 +3,35 @@ import requests
 from config.env import PAYSTACK_KEY 
 
 
-url = "https://api.paystack.co/transaction/initialize"
+
 
 def initialize_payment(email, amount):
+    url = "https://api.paystack.co/transaction/initialize"
     headers = {
         "Authorization": f"Bearer {PAYSTACK_KEY}",
         "Content-Type": "application/json"
     }
 
-    data  = {
+    data = {
         "email": email,
-        "amount": amount * 100
+        "amount": int(amount) * 100  # Paystack expects amount in kobo
     }
 
     response = requests.post(url, data=orjson.dumps(data), headers=headers)
-    if response.status_code == 200:
+
+    try:
         data = response.json()
-        url = data['data']['authorization_url']
-        reference = data['data']['reference']
-        return url, reference
-    return response.text
+    except Exception:
+        return {"error": "Invalid response from Paystack", "details": response.text}
+
+    if response.status_code == 200 and data.get("status") is True:
+        return {
+            "url": data['data']['authorization_url'],
+            "reference": data['data']['reference']
+        }
+
+    # Always return dict with error
+    return {
+        "error": "Failed to initialize payment",
+        "details": data
+    }

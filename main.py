@@ -30,8 +30,6 @@ def get_crypto_data():
         return listing
 
 
-
-import requests
 def get_coin_data(coin_id):
     headers = {
         "X-CMC_PRO_API_KEY": CMC_KEY,

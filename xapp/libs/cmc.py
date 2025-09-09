@@ -1,6 +1,6 @@
 import requests
 from config.env import CMC_KEY
-
+from django.contrib.auth.models import User
 
 url1 = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
 
