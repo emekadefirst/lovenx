@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from .libs.cmc import get_crypto_data, get_coin_data
-from .libs.paystack import initialize_payment
+from .libs.paystack import initialize_payment, verify_payment
 from django.http import HttpResponse
 
 
@@ -87,3 +87,46 @@ def fund_wallet(request):
 
     return HttpResponse(status=405)  
 
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from .models import Transaction
+
+
+@csrf_exempt
+def verify_service(request, reference):
+    ftst = verify_payment(reference=reference)
+    trans = get_object_or_404(Transaction, reference=ftst['reference'])
+
+    if ftst['status'] == 'success':
+        trans.status = Transaction.Status.COMPLETED
+        trans.previous_balance = trans.wallet.balance
+        trans.new_balance = trans.wallet.balance + trans.amount
+        # update wallet balance
+        trans.wallet.balance = trans.new_balance
+        trans.wallet.save()
+        trans.save()
+
+    elif ftst['status'] == 'failed':
+        trans.status = Transaction.Status.FAILED
+        trans.save()
+
+    elif ftst['status'] == 'cancelled':
+        trans.status = Transaction.Status.CANCELLED
+        trans.save()
+
+    else:
+        # if for any reason Paystack/processor returns something unexpected
+        trans.status = Transaction.Status.PENDING
+        trans.save()
+
+    return JsonResponse({
+        "reference": trans.reference,
+        "status": trans.status,
+        "wallet_balance": str(trans.wallet.balance)
+    })
+
+
+
+def callback_page(request):
+    return render(request, 'callback.html')

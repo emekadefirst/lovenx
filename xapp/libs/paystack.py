@@ -35,3 +35,19 @@ def initialize_payment(email, amount):
         "error": "Failed to initialize payment",
         "details": data
     }
+
+
+def verify_payment(reference):
+    url = f'https://api.paystack.co/transaction/verify/{reference}'
+    headers = {
+        "Authorization": f"Bearer {PAYSTACK_KEY}",
+        "Content-Type": "application/json"
+    }
+    response = requests.post(url,  headers=headers)
+    if response.status_code == 200:
+        data = response.json()
+        return {
+            'status': data['data']['status'],
+            'reference': data['data']['reference']
+        }
+    return data['message']
